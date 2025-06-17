@@ -1,0 +1,36 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5000:7001"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/blogposts
+      - JWT_SECRET=MIHcAgEBBEIAnwWrlP98RkEr5x5RUFbGo1IcmjrcX6ur0PiMA
+      - JWT_EXPIRE=7d
+      - PORT=7001
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - blog-network
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=blogposts
+    networks:
+      - blog-network
+
+volumes:
+  mongo-data:
+
+networks:
+  blog-network:
+    driver: bridge
